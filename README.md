@@ -13,5 +13,5 @@ docker container run -d --rm -p 80:80 --name sample_dockerized_laravel6 sample_d
 docker container exec -it sample_dockerized_laravel6 bash
 
 # 停止
-docker container stop sample_dockerized_larave
+docker container stop sample_dockerized_larave6
 ```
