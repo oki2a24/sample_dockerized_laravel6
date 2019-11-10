@@ -13,10 +13,12 @@ ENV TZ ${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y \
+  libpq-dev \
   libzip-dev \
   && docker-php-ext-install \
   bcmath \
   pdo_mysql \
+  pdo_pgsql \
   zip \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
@@ -30,3 +32,4 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 COPY --from=build --chown=www-data:www-data ./app/ .
+RUN touch ./database/database.sqlite

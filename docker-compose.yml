@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      - DATABASE_URL=pgsql://laravel:secret@db:5432/laravel?charset=utf8&prefix_indexes=true&schema=public&sslmode=prefer
+    ports:
+      - "80:80"
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=laravel
+      - POSTGRES_DB=laravel
