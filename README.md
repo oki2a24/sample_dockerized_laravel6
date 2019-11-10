@@ -19,3 +19,18 @@ docker container exec -it sample_dockerized_laravel6 bash
 # 停止
 docker container stop sample_dockerized_larave6
 ```
+
+## Docker Compose での実行
+``` bash
+# ビルド
+docker-compose build
+
+# 動作確認
+docker-compose up -d
+
+# コンテナ内に入る
+docker-compose exec app bash
+
+# 破棄
+docker-compose down -v
+```
