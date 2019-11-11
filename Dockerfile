@@ -6,6 +6,13 @@ RUN composer dump-autoload \
   && composer run-script post-root-package-install \
   && composer run-script post-create-project-cmd
 
+FROM node:12 AS build_npm
+WORKDIR /app
+COPY ./package.json ./package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm run production
+
 FROM php:7.3-apache
 
 ARG TZ=Asia/Tokyo
@@ -33,3 +40,6 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 COPY --from=build --chown=www-data:www-data ./app/ .
 RUN touch ./database/database.sqlite
+COPY --from=build_npm --chown=www-data:www-data ./app/public/css ./public/css
+COPY --from=build_npm --chown=www-data:www-data ./app/public/js ./public/js
+COPY --from=build_npm --chown=www-data:www-data ./app/public/mix-manifest.json ./public/mix-manifest.json
