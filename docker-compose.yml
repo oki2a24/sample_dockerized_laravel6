@@ -5,6 +5,7 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+      target: production
     environment:
       - DATABASE_URL=pgsql://laravel:secret@db:5432/laravel?charset=utf8&prefix_indexes=true&schema=public&sslmode=prefer
     ports:

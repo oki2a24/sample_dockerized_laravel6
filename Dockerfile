@@ -1,4 +1,4 @@
-FROM composer:1.9 AS build
+FROM composer:1.9 AS build_composer
 COPY --chown=www-data:www-data ./composer.json ./composer.lock ./
 RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest --no-interaction
 COPY --chown=www-data:www-data . .
@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 RUN npm run production
 
-FROM php:7.3-apache
+FROM php:7.3-apache AS shared
 
 ARG TZ=Asia/Tokyo
 ENV TZ ${TZ}
@@ -38,7 +38,16 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-COPY --from=build --chown=www-data:www-data ./app/ .
+FROM shared AS develop
+COPY --from=build_composer /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+  && apt-get install -y nodejs \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+FROM shared AS production
+COPY --from=build_composer --chown=www-data:www-data ./app/ .
 RUN touch ./database/database.sqlite
 COPY --from=build_npm --chown=www-data:www-data ./app/public/css ./public/css
 COPY --from=build_npm --chown=www-data:www-data ./app/public/js ./public/js
