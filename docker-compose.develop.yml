@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: develop
+    volumes:
+      - ./:/var/www/html:cached
+    ports:
+      - "80:80"
