@@ -1,4 +1,4 @@
-FROM php:7.3-apache AS shared
+FROM php:7.4.3-apache AS shared
 ARG TZ=Asia/Tokyo
 ENV TZ ${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -20,7 +20,7 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-FROM composer:1.9 AS composer
+FROM composer:1.9.3 AS composer
 
 FROM shared AS develop
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -38,7 +38,7 @@ RUN composer dump-autoload \
   && composer run-script post-root-package-install \
   && composer run-script post-create-project-cmd
 
-FROM node:12 AS build_npm
+FROM node:12.16.1 AS build_npm
 WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm install
