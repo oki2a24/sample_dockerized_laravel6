@@ -22,6 +22,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 ENV APP_ENV laravel
 
 FROM composer:1.9.3 AS composer
+ENV APP_ENV laravel
 
 FROM shared AS develop
 COPY --from=composer /usr/bin/composer /usr/bin/composer
