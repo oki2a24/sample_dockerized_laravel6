@@ -19,8 +19,10 @@ COPY ./docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+ENV APP_ENV laravel
 
 FROM composer:1.9.3 AS composer
+ENV APP_ENV laravel
 
 FROM shared AS develop
 COPY --from=composer /usr/bin/composer /usr/bin/composer
