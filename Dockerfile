@@ -1,4 +1,4 @@
-FROM php:7.4.3-apache AS shared
+FROM php:7.4.4-apache AS shared
 ARG TZ=Asia/Tokyo
 ENV TZ ${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -21,7 +21,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 ENV APP_ENV laravel
 
-FROM composer:1.9.3 AS composer
+FROM composer:1.10.1 AS composer
 ENV APP_ENV laravel
 
 FROM shared AS develop
