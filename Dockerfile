@@ -15,10 +15,12 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 COPY ./docker/my.ini /usr/local/etc/php/conf.d/
 RUN a2enmod rewrite
-COPY ./docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+COPY ./docker/001-my.conf /etc/apache2/sites-available/001-my.conf
+RUN a2dissite 000-default \
+  && a2ensite 001-my
 ENV APP_ENV laravel
 
 FROM composer:1.10.1 AS composer
