@@ -1,4 +1,4 @@
-FROM php:7.4.4-apache AS shared
+FROM php:7.4.5-apache AS shared
 ARG TZ=Asia/Tokyo
 ENV TZ ${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -23,7 +23,7 @@ RUN a2dissite 000-default \
   && a2ensite 001-my
 ENV APP_ENV laravel
 
-FROM composer:1.10.1 AS composer
+FROM composer:1.10.5 AS composer
 ENV APP_ENV laravel
 
 FROM shared AS develop
@@ -42,7 +42,7 @@ RUN composer dump-autoload \
   && composer run-script post-root-package-install \
   && composer run-script post-create-project-cmd
 
-FROM node:12.16.1 AS build_npm
+FROM node:12.16.2 AS build_npm
 WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm install
