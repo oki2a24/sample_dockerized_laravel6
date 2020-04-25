@@ -22,6 +22,13 @@ COPY ./docker/001-my.conf /etc/apache2/sites-available/001-my.conf
 RUN a2dissite 000-default \
   && a2ensite 001-my
 ENV APP_ENV laravel
+RUN apt-get update && apt-get install -y \
+  supervisor \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/log/supervisor
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["/usr/bin/supervisord"]
 
 FROM composer:1.10.5 AS composer
 ENV APP_ENV laravel
