@@ -2,6 +2,7 @@ FROM php:7.4.7-apache AS shared
 RUN apt-get update && apt-get install -y \
   libpq-dev \
   libzip-dev \
+  locales \
   unzip \
   && docker-php-ext-install \
   bcmath \
@@ -10,6 +11,7 @@ RUN apt-get update && apt-get install -y \
   zip \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+RUN localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8
 COPY ./docker/my.ini /usr/local/etc/php/conf.d/
 RUN a2enmod rewrite
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
