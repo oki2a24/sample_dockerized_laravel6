@@ -8,6 +8,7 @@ services:
       target: production
     environment:
       - DATABASE_URL=pgsql://laravel:secret@db:5432/laravel?charset=utf8&prefix_indexes=true&schema=public&sslmode=prefer
+      - TZ=Asia/Tokyo
     ports:
       - "80:80"
   db:
@@ -17,3 +18,4 @@ services:
       - POSTGRES_USER=laravel
       - POSTGRES_DB=laravel
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --locale=C
+      - TZ=Asia/Tokyo
