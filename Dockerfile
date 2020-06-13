@@ -39,7 +39,7 @@ ENV APP_ENV laravel
 FROM shared AS develop
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
   && apt-get install -y nodejs \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
