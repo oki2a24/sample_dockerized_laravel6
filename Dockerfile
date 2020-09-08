@@ -1,11 +1,13 @@
 FROM php:7.4.7-apache AS shared
 RUN apt-get update && apt-get install -y \
+  libicu-dev \
   libpq-dev \
   libzip-dev \
   locales \
   unzip \
   && docker-php-ext-install \
   bcmath \
+  intl \
   pdo_mysql \
   pdo_pgsql \
   zip \
