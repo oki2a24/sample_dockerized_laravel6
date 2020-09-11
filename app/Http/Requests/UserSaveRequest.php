@@ -48,12 +48,13 @@ class UserSaveRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $values = explode(',', $value);
                     $parameters = ['rfc', 'spoof'];
-                    foreach ($values as $value) {
-                        $isValid = $this->validateEmail($attribute, $value, $parameters);
-                        if (!$isValid) {
-                            $fail(trans('validation.email'));
-                            break;
-                        }
+                    $invalidEmails = collect($values)
+                        ->filter(function ($value) use ($attribute, $parameters) {
+                            return !$this->validateEmail($attribute, $value, $parameters);
+                        })
+                        ->implode(', ');
+                    if ($invalidEmails) {
+                        $fail($attribute . ' に指定した次のメールアドレスは不正です。: ' . $invalidEmails);
                     }
                 },
             ],

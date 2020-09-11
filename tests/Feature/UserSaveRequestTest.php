@@ -72,7 +72,7 @@ class UserSaveRequestTest extends TestCase
     public function cc_emailsの中にメールアドレスとして不正なemailが存在するエラーとなること(): void
     {
         $data = [
-            'cc_emails' => '1@example.com,2@example.com,3atexample.com',
+            'cc_emails' => '1example.com,2@example.com,3atexample.com',
             'name' => '名前',
             'email' => 'email@example.com',
         ];
@@ -90,7 +90,7 @@ class UserSaveRequestTest extends TestCase
         $this->assertEquals($expectedFailed, $validator->failed());
         //dd($validator->errors());
         $actualMessage = $validator->errors()->all()[0];
-        $this->assertEquals('The cc emails must be a valid email address.', $actualMessage);
+        $this->assertEquals('cc_emails に指定した次のメールアドレスは不正です。: 1example.com, 3atexample.com', $actualMessage);
     }
 
 
