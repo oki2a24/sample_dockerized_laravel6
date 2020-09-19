@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DelimitedMax;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
@@ -39,12 +40,7 @@ class UserSaveRequest extends FormRequest
             'cc_emails' => [
                 'nullable',
                 'max:2550',
-                function ($attribute, $value, $fail) {
-                    $values = explode(',', $value);
-                    if (count($values) > 10) {
-                        $fail(trans($attribute . ' に指定できる email は最大 10 個です。'));
-                    }
-                },
+                new DelimitedMax(10),
                 function ($attribute, $value, $fail) {
                     $values = explode(',', $value);
                     $parameters = ['rfc', 'spoof'];

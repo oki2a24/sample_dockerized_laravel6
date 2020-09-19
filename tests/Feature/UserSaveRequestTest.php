@@ -58,11 +58,11 @@ class UserSaveRequestTest extends TestCase
         $result = $validator->passes();
         $this->assertFalse($result);
         $expectedFailed = [
-            'cc_emails' => ['Illuminate\Validation\ClosureValidationRule' => [],],
+            'cc_emails' => ['App\Rules\DelimitedMax' => [],],
         ];
         $this->assertEquals($expectedFailed, $validator->failed());
         $actualMessage = $validator->errors()->all()[0];
-        $this->assertEquals('cc_emails に指定できる email は最大 10 個です。', $actualMessage);
+        $this->assertEquals('cc emails に指定できる email は最大 10 個です。', $actualMessage);
     }
 
     /**
