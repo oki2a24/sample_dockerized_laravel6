@@ -84,13 +84,13 @@ class UserSaveRequestTest extends TestCase
         $result = $validator->passes();
         $this->assertFalse($result);
         $expectedFailed = [
-            'cc_emails' => ['Illuminate\Validation\ClosureValidationRule' => [],],
+            'cc_emails' => ['App\Rules\DelimitedEmail' => [],],
         ];
         //dd($validator->failed());
         $this->assertEquals($expectedFailed, $validator->failed());
         //dd($validator->errors());
         $actualMessage = $validator->errors()->all()[0];
-        $this->assertEquals('cc_emails に指定した次のメールアドレスは不正です。: 1example.com, 3atexample.com', $actualMessage);
+        $this->assertEquals('cc emails に指定した次のメールアドレスは不正です。: 1example.com, 3atexample.com', $actualMessage);
     }
 
 

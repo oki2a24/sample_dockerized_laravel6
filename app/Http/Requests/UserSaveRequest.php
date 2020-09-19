@@ -2,16 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DelimitedEmail;
 use App\Rules\DelimitedMax;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Concerns\ValidatesAttributes;
 use Illuminate\Validation\Rule;
 
 class UserSaveRequest extends FormRequest
 {
-    use ValidatesAttributes;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -41,18 +39,7 @@ class UserSaveRequest extends FormRequest
                 'nullable',
                 'max:2550',
                 new DelimitedMax(10),
-                function ($attribute, $value, $fail) {
-                    $values = explode(',', $value);
-                    $parameters = ['rfc', 'spoof'];
-                    $invalidEmails = collect($values)
-                        ->filter(function ($value) use ($attribute, $parameters) {
-                            return !$this->validateEmail($attribute, $value, $parameters);
-                        })
-                        ->implode(', ');
-                    if ($invalidEmails) {
-                        $fail($attribute . ' に指定した次のメールアドレスは不正です。: ' . $invalidEmails);
-                    }
-                },
+                new DelimitedEmail(),
             ],
             'zip' => 'nullable|regex:/^\d{7}$/',
         ];
